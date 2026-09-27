@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的追番记录</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 我的追番记录</h1>
+
+        <!-- 番剧列表区域 -->
+        <div id="animeList"></div>
+
+        <!-- 底部添加按钮 -->
+        <div class="add-button-wrapper">
+            <button id="toggleAddBtn" onclick="toggleAddForm()">+ 添加番剧</button>
+        </div>
+
+        <!-- 添加/编辑表单（默认隐藏） -->
+        <div id="addForm" class="add-form hidden">
+            <h2 id="formTitle">添加新番剧</h2>
+            <form id="animeForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>年份：</label>
+                        <select id="year" required>
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>季度：</label>
+                        <select id="season" required>
+                            <option value="春季">春季（1-3月）</option>
+                            <option value="夏季">夏季（4-6月）</option>
+                            <option value="秋季">秋季（7-9月）</option>
+                            <option value="冬季">冬季（10-12月）</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>中文名：</label>
+                    <input type="text" id="titleCn" required placeholder="例：葬送的芙莉莲">
+                </div>
+                <div class="form-group">
+                    <label>原名（日文/英文）：</label>
+                    <input type="text" id="titleOrg" placeholder="例：葬送のフリーレン">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>话数：</label>
+                        <input type="text" id="episodes" placeholder="例：28话 / 连载中">
+                    </div>
+                    <div class="form-group">
+                        <label>状态：</label>
+                        <select id="status">
+                            <option value="看完">看完</option>
+                            <option value="在看">在看</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>封面图片链接：</label>
+                    <input type="url" id="cover" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="form-group">
+                    <label>备注：</label>
+                    <textarea id="note" rows="2" placeholder="评分、观后感等"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="submitBtn">添加</button>
+                    <button type="button" class="cancel-btn" onclick="cancelEdit()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let animeData = JSON.parse(localStorage.getItem('animeData')) || {};
+        let editingKey = null;
+        let editingIndex = null;
+
+        function saveData() {
+            localStorage.setItem('animeData', JSON.stringify(animeData));
+        }
+
+        // 切换表单显示/隐藏
+        function toggleAddForm() {
+            const form = document.getElementById('addForm');
+            form.classList.toggle('hidden');
+            if (!form.classList.contains('hidden')) {
+                form.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // 取消编辑
+        function cancelEdit() {
+            document.getElementById('animeForm').reset();
+            document.getElementById('addForm').classList.add('hidden');
+            editingKey = null;
+            editingIndex = null;
+            document.getElementById('formTitle').textContent = '添加新番剧';
+            document.getElementById('submitBtn').textContent = '添加';
+        }
+
+        // 渲染番剧列表
+        function renderList() {
+            const listContainer = document.getElementById('animeList');
+            listContainer.innerHTML = '';
+
+            const sortedKeys = Object.keys(animeData).sort().reverse();
+
+            sortedKeys.forEach(key => {
+                const [year, season] = key.split('-');
+                const animes = animeData[key];
+
+                const section = document.createElement('div');
+                section.className = 'season-section';
+                section.innerHTML = `<h2>${year}年 ${season}</h2>`;
+
+                const table = document.createElement('table');
+                table.className = 'anime-table';
+
+                animes.forEach((anime, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="col-cover">
+                            ${anime.cover ? `<img src="${anime.cover}" alt="${anime.titleCn}">` : '<div class="no-cover">无图</div>'}
+                        </td>
+                        <td class="col-title">
+                            <div class="title-cn">${anime.titleCn}</div>
+                            <div class="title-org">${anime.titleOrg || ''}</div>
+                        </td>
+                        <td class="col-episodes">${anime.episodes || '-'}</td>
+                        <td class="col-status">
+                            <span class="status-badge ${anime.status === '看完' ? 'status-done' : 'status-watching'}">${anime.status}</span>
+                        </td>
+                        <td class="col-actions">
+                            <button class="btn-edit" onclick="editAnime('${key}', ${index})">编辑</button>
+                            <button class="btn-delete" onclick="deleteAnime('${key}', ${index})">删除</button>
+                        </td>
+                    `;
+                    table.appendChild(tr);
+                });
+
+                section.appendChild(table);
+                listContainer.appendChild(section);
+            });
+        }
+
+        // 添加/更新番剧
+        document.getElementById('animeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const year = document.getElementById('year').value;
+            const season = document.getElementById('season').value;
+            const titleCn = document.getElementById('titleCn').value;
+            const titleOrg = document.getElementById('titleOrg').value;
+            const episodes = document.getElementById('episodes').value;
+            const status = document.getElementById('status').value;
+            const cover = document.getElementById('cover').value;
+            const note = document.getElementById('note').value;
+
+            const key = `${year}-${season}`;
+            if (!animeData[key]) {
+                animeData[key] = [];
+            }
+
+            const newAnime = { titleCn, titleOrg, episodes, status, cover, note };
+
+            if (editingKey !== null && editingIndex !== null) {
+                // 编辑模式：更新已有记录
+                animeData[key][editingIndex] = newAnime;
+            } else {
+                // 添加模式：新增记录
+                animeData[key].push(newAnime);
+            }
+
+            saveData();
+            renderList();
+            cancelEdit();
+        });
+
+        // 删除番剧
+        function deleteAnime(key, index) {
+            if (confirm('确定要删除这部番剧吗？')) {
+                animeData[key].splice(index, 1);
+                if (animeData[key].length === 0) {
+                    delete animeData[key];
+                }
+                saveData();
+                renderList();
+            }
+        }
+
+        // 编辑番剧
+        function editAnime(key, index) {
+            const anime = animeData[key][index];
+            editingKey = key;
+            editingIndex = index;
+
+            document.getElementById('year').value = key.split('-')[0];
+            document.getElementById('season').value = key.split('-')[1];
+            document.getElementById('titleCn').value = anime.titleCn;
+            document.getElementById('titleOrg').value = anime.titleOrg || '';
+            document.getElementById('episodes').value = anime.episodes || '';
+            document.getElementById('status').value = anime.status;
+            document.getElementById('cover').value = anime.cover || '';
+            document.getElementById('note').value = anime.note || '';
+
+            document.getElementById('formTitle').textContent = '编辑番剧';
+            document.getElementById('submitBtn').textContent = '保存';
+            document.getElementById('addForm').classList.remove('hidden');
+            document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        renderList();
+    </script>
+</body>
+</html>
