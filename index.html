@@ -119,7 +119,7 @@
             document.getElementById('submitBtn').textContent = '添加';
         }
 
-        // 渲染番剧列表（双行布局）
+        // 渲染番剧列表（双行对齐布局）
         function renderList() {
             const listContainer = document.getElementById('animeList');
             listContainer.innerHTML = '';
@@ -138,9 +138,8 @@
                 table.className = 'anime-table';
 
                 animes.forEach((anime, index) => {
-                    // 第一行：封面 + 中文 + 原名 + 类型 + 话数 + 状态
+                    // 第一行
                     const tr1 = document.createElement('tr');
-                    tr1.setAttribute('rowspan', '2');
                     tr1.innerHTML = `
                         <td class="col-cover" rowspan="2">
                             ${anime.cover ? `<img src="./covers/${anime.cover}" alt="${anime.titleCn}">` : '<div class="no-cover">无</div>'}
@@ -153,7 +152,7 @@
                         </td>
                     `;
 
-                    // 第二行：原名 + 备注 + 操作按钮
+                    // 第二行
                     const tr2 = document.createElement('tr');
                     tr2.innerHTML = `
                         <td class="col-title-org">${anime.titleOrg || ''}</td>
