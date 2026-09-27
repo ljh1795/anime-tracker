@@ -12,29 +12,29 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
 }
 
 h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     color: #2c3e50;
-    font-size: 22px;
+    font-size: 24px;
 }
 
 /* 季度分组标题 */
 .season-section {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .season-section h2 {
     background: #2c3e50;
     color: #fff;
-    padding: 8px 15px;
+    padding: 10px 15px;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 17px;
     margin-bottom: 0;
 }
 
@@ -45,91 +45,94 @@ h1 {
     background: #fff;
     border-radius: 0 0 5px 5px;
     overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .anime-table tr {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .anime-table tr:last-child {
     border-bottom: none;
 }
 
-/* 极度压缩的单元格 */
+/* 调整过的表格单元格 */
 .anime-table td {
-    padding: 8px 6px !important;
+    padding: 16px 12px !important; /* 增加了上下留白 */
     vertical-align: middle;
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 /* 封面列 */
 .col-cover {
-    width: 50px;
+    width: 70px;
     text-align: center;
 }
 
 .col-cover img {
-    width: 36px;
-    height: 50px;
+    width: 60px;
+    height: 85px;
     object-fit: cover;
     border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .no-cover {
-    width: 36px;
-    height: 50px;
-    background: #eee;
+    width: 60px;
+    height: 85px;
+    background: #f5f5f5;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 12px;
     color: #999;
 }
 
 /* 标题列 */
 .col-title {
-    width: 160px;
+    width: 200px;
 }
 
 .title-cn {
     font-weight: bold;
-    font-size: 13px;
+    font-size: 14px;
     color: #2c3e50;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 }
 
 .title-org {
-    font-size: 11px;
-    color: #999;
+    font-size: 12px;
+    color: #888;
 }
 
 /* 类型列 */
 .col-type {
-    width: 50px;
+    width: 60px;
     text-align: center;
     color: #666;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 /* 话数列 */
 .col-episodes {
-    width: 60px;
+    width: 70px;
     text-align: center;
     color: #666;
+    font-size: 13px;
 }
 
 /* 状态列 */
 .col-status {
-    width: 60px;
+    width: 70px;
     text-align: center;
 }
 
 .status-badge {
     display: inline-block;
-    padding: 2px 10px;
-    border-radius: 10px;
+    padding: 3px 12px;
+    border-radius: 12px;
     font-size: 12px;
     font-weight: bold;
 }
@@ -144,27 +147,27 @@ h1 {
     color: #856404;
 }
 
-/* 备注列（放在删除按钮前） */
+/* 备注列 */
 .col-note {
-    max-width: 150px;
+    max-width: 200px;
     color: #888;
-    font-size: 12px;
+    font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* 操作列（按钮颜色变淡） */
+/* 操作列 */
 .col-actions {
     text-align: center;
-    width: 90px;
+    width: 100px;
 }
 
 .col-actions button {
-    padding: 3px 8px;
-    font-size: 11px;
+    padding: 4px 12px;
+    font-size: 12px;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
     margin: 0 2px;
 }
@@ -190,7 +193,7 @@ h1 {
 /* 底部添加按钮 */
 .add-button-wrapper {
     position: fixed;
-    bottom: 20px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -200,7 +203,7 @@ h1 {
     background: #3498db;
     color: #fff;
     border: none;
-    padding: 12px 30px;
+    padding: 14px 40px;
     border-radius: 25px;
     font-size: 16px;
     cursor: pointer;
@@ -216,7 +219,7 @@ h1 {
 /* 添加/编辑表单 */
 .add-form {
     background: #fff;
-    padding: 20px;
+    padding: 25px;
     border-radius: 10px;
     margin-top: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -228,14 +231,14 @@ h1 {
 }
 
 .add-form h2 {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     color: #34495e;
     font-size: 16px;
 }
 
 .form-row {
     display: flex;
-    gap: 15px;
+    gap: 20px;
 }
 
 .form-row .form-group {
@@ -243,12 +246,12 @@ h1 {
 }
 
 .form-group {
-    margin-bottom: 12px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     font-size: 13px;
     font-weight: bold;
     color: #555;
@@ -258,20 +261,20 @@ h1 {
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 8px 10px;
+    padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .form-actions {
     display: flex;
     gap: 10px;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .form-actions button {
-    padding: 8px 20px;
+    padding: 10px 24px;
     border: none;
     border-radius: 5px;
     font-size: 14px;
@@ -303,26 +306,26 @@ h1 {
     }
 
     .anime-table td {
-        padding: 6px 4px !important;
+        padding: 10px 6px !important;
         font-size: 12px;
     }
 
     .col-cover img,
     .no-cover {
-        width: 30px;
-        height: 42px;
+        width: 45px;
+        height: 65px;
     }
 
     .col-title {
-        width: 120px;
+        width: 140px;
     }
 
     .title-cn {
-        font-size: 12px;
+        font-size: 13px;
     }
 
     .title-org {
-        font-size: 10px;
+        font-size: 11px;
     }
 
     .col-type,
@@ -332,17 +335,17 @@ h1 {
     }
 
     .col-note {
-        max-width: 80px;
+        max-width: 100px;
         font-size: 11px;
     }
 
     .col-actions {
-        width: 70px;
+        width: 80px;
     }
 
     .col-actions button {
-        padding: 2px 6px;
-        font-size: 10px;
+        padding: 3px 8px;
+        font-size: 11px;
     }
 
     .form-row {
