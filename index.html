@@ -119,7 +119,7 @@
             document.getElementById('submitBtn').textContent = '添加';
         }
 
-        // 渲染番剧列表
+        // 渲染番剧列表（双行布局）
         function renderList() {
             const listContainer = document.getElementById('animeList');
             listContainer.innerHTML = '';
@@ -138,27 +138,34 @@
                 table.className = 'anime-table';
 
                 animes.forEach((anime, index) => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="col-cover">
+                    // 第一行：封面 + 中文 + 原名 + 类型 + 话数 + 状态
+                    const tr1 = document.createElement('tr');
+                    tr1.setAttribute('rowspan', '2');
+                    tr1.innerHTML = `
+                        <td class="col-cover" rowspan="2">
                             ${anime.cover ? `<img src="./covers/${anime.cover}" alt="${anime.titleCn}">` : '<div class="no-cover">无</div>'}
                         </td>
-                        <td class="col-title">
-                            <div class="title-cn">${anime.titleCn}</div>
-                            <div class="title-org">${anime.titleOrg || ''}</div>
-                        </td>
+                        <td class="col-title-cn">${anime.titleCn}</td>
                         <td class="col-type">${anime.type || '-'}</td>
                         <td class="col-episodes">${anime.episodes || '-'}</td>
                         <td class="col-status">
                             <span class="status-badge ${anime.status === '看完' ? 'status-done' : 'status-watching'}">${anime.status}</span>
                         </td>
-                        <td class="col-note">${anime.note || ''}</td>
+                    `;
+
+                    // 第二行：原名 + 备注 + 操作按钮
+                    const tr2 = document.createElement('tr');
+                    tr2.innerHTML = `
+                        <td class="col-title-org">${anime.titleOrg || ''}</td>
+                        <td class="col-note" colspan="3">${anime.note || ''}</td>
                         <td class="col-actions">
                             <button class="btn-edit" onclick="editAnime('${key}', ${index})">编辑</button>
                             <button class="btn-delete" onclick="deleteAnime('${key}', ${index})">删除</button>
                         </td>
                     `;
-                    table.appendChild(tr);
+
+                    table.appendChild(tr1);
+                    table.appendChild(tr2);
                 });
 
                 section.appendChild(table);
@@ -188,10 +195,8 @@
             const newAnime = { titleCn, titleOrg, type, episodes, status, cover, note };
 
             if (editingKey !== null && editingIndex !== null) {
-                // 编辑模式：更新已有记录
                 animeData[key][editingIndex] = newAnime;
             } else {
-                // 添加模式：新增记录
                 animeData[key].push(newAnime);
             }
 
