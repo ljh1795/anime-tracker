@@ -53,6 +53,15 @@
                     <label>原名（日文/英文）：</label>
                     <input type="text" id="titleOrg" placeholder="例：葬送のフリーレン">
                 </div>
+                <div class="form-group">
+                    <label>番剧类型：</label>
+                    <select id="type">
+                        <option value="原创">原创</option>
+                        <option value="漫改">漫改</option>
+                        <option value="轻改">轻改</option>
+                        <option value="游戏改">游戏改</option>
+                    </select>
+                </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>话数：</label>
@@ -67,8 +76,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>封面图片链接：</label>
-                    <input type="url" id="cover" placeholder="https://example.com/image.jpg">
+                    <label>封面文件名：</label>
+                    <input type="text" id="cover" placeholder="填 covers 文件夹里的文件名，如 GrandBlue.jpg">
                 </div>
                 <div class="form-group">
                     <label>备注：</label>
@@ -132,16 +141,18 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="col-cover">
-                            ${anime.cover ? `<img src="${anime.cover}" alt="${anime.titleCn}">` : '<div class="no-cover">无图</div>'}
+                            ${anime.cover ? `<img src="./covers/${anime.cover}" alt="${anime.titleCn}">` : '<div class="no-cover">无</div>'}
                         </td>
                         <td class="col-title">
                             <div class="title-cn">${anime.titleCn}</div>
                             <div class="title-org">${anime.titleOrg || ''}</div>
                         </td>
+                        <td class="col-type">${anime.type || '-'}</td>
                         <td class="col-episodes">${anime.episodes || '-'}</td>
                         <td class="col-status">
                             <span class="status-badge ${anime.status === '看完' ? 'status-done' : 'status-watching'}">${anime.status}</span>
                         </td>
+                        <td class="col-note">${anime.note || ''}</td>
                         <td class="col-actions">
                             <button class="btn-edit" onclick="editAnime('${key}', ${index})">编辑</button>
                             <button class="btn-delete" onclick="deleteAnime('${key}', ${index})">删除</button>
@@ -163,6 +174,7 @@
             const season = document.getElementById('season').value;
             const titleCn = document.getElementById('titleCn').value;
             const titleOrg = document.getElementById('titleOrg').value;
+            const type = document.getElementById('type').value;
             const episodes = document.getElementById('episodes').value;
             const status = document.getElementById('status').value;
             const cover = document.getElementById('cover').value;
@@ -173,7 +185,7 @@
                 animeData[key] = [];
             }
 
-            const newAnime = { titleCn, titleOrg, episodes, status, cover, note };
+            const newAnime = { titleCn, titleOrg, type, episodes, status, cover, note };
 
             if (editingKey !== null && editingIndex !== null) {
                 // 编辑模式：更新已有记录
@@ -210,6 +222,7 @@
             document.getElementById('season').value = key.split('-')[1];
             document.getElementById('titleCn').value = anime.titleCn;
             document.getElementById('titleOrg').value = anime.titleOrg || '';
+            document.getElementById('type').value = anime.type || '原创';
             document.getElementById('episodes').value = anime.episodes || '';
             document.getElementById('status').value = anime.status;
             document.getElementById('cover').value = anime.cover || '';
