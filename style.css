@@ -420,3 +420,9 @@ h1 {
         gap: 10px;
     }
 }
+
+/* 状态标签颜色扩展 */
+.status-badge.status-pending {
+    background-color: #FFF7ED;
+    color: #C2410C;
+}
