@@ -84,13 +84,15 @@
                     <div class="form-group">
                         <label>状态：</label>
                         <select id="status">
-                            <option value="看完">看完</option>
+                            <option value="想看">想看</option>
                             <option value="在看">在看</option>
+                            <option value="连载中">连载中</option>
+                            <option value="看完">看完</option>
                         </select>
                     </div>
                 </div>
                 
-                <!-- 新增：封面上传控件 -->
+                <!-- 封面上传控件 -->
                 <div class="form-group">
                     <label>封面图片：</label>
                     <input type="file" id="coverFile" accept="image/*" onchange="previewImage(this)">
@@ -203,7 +205,7 @@
                         <td class="col-type">${anime.type || '-'}</td>
                         <td class="col-episodes">${anime.episodes || '-'}</td>
                         <td class="col-status">
-                            <span class="status-badge ${anime.status === '看完' ? 'status-done' : 'status-watching'}">${anime.status}</span>
+                            <span class="status-badge ${anime.status === '看完' ? 'status-done' : (anime.status === '在看' ? 'status-watching' : 'status-pending')}">${anime.status}</span>
                         </td>
                     `;
 
