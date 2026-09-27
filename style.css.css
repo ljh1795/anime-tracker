@@ -63,7 +63,7 @@ h1 {
     line-height: 1.5;
 }
 
-/* 封面列（跨两行，140px大图） */
+/* 封面列（跨两行，放大一倍） */
 .col-cover {
     width: 140px;
     text-align: center;
@@ -218,6 +218,64 @@ h1 {
     box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
 }
 
+/* 数据备份区域 */
+.data-backup-area {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.backup-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.backup-desc {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.backup-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.backup-actions button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    color: #555;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.backup-actions button:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
+}
+
+.btn-export {
+    background: #2ecc71 !important;
+    color: #fff !important;
+    border-color: #27ae60 !important;
+}
+.btn-export:hover { background: #27ae60 !important; }
+
+.btn-clear {
+    background: #e74c3c !important;
+    color: #fff !important;
+    border-color: #c0392b !important;
+}
+.btn-clear:hover { background: #c0392b !important; }
+
 /* 添加/编辑表单 */
 .add-form {
     background: #fff;
@@ -229,7 +287,7 @@ h1 {
 }
 
 .add-form.hidden {
-    display: none;
+    display: none !important;
 }
 
 .add-form h2 {
@@ -301,65 +359,6 @@ h1 {
     background: #7f8c8d;
 }
 
-/* 数据备份区域 */
-.backup-section {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.backup-section h3 {
-    color: #34495e;
-    font-size: 15px;
-    margin-bottom: 12px;
-}
-
-.backup-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
-
-.backup-btn {
-    padding: 8px 18px;
-    border: none;
-    border-radius: 5px;
-    font-size: 13px;
-    cursor: pointer;
-    color: #fff;
-}
-
-.export-btn {
-    background: #27ae60;
-}
-
-.export-btn:hover {
-    background: #219a52;
-}
-
-.import-btn {
-    background: #8e44ad;
-}
-
-.import-btn:hover {
-    background: #7d3c98;
-}
-
-.clear-btn {
-    background: #e74c3c;
-}
-
-.clear-btn:hover {
-    background: #c0392b;
-}
-
-.backup-hint {
-    font-size: 12px;
-    color: #999;
-    line-height: 1.6;
-}
-
 /* 移动端适配 */
 @media (max-width: 768px) {
     .container {
@@ -416,11 +415,8 @@ h1 {
         gap: 0;
     }
 
-    .backup-buttons {
+    .backup-actions {
         flex-direction: column;
-    }
-
-    .backup-btn {
-        width: 100%;
+        gap: 10px;
     }
 }
