@@ -55,28 +55,30 @@ h1 {
     border-bottom: none;
 }
 
+/* 极度压缩的单元格 */
 .anime-table td {
-    padding: 10px 12px;
+    padding: 8px 6px !important;
     vertical-align: middle;
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.4;
 }
 
 /* 封面列 */
 .col-cover {
-    width: 60px;
+    width: 50px;
     text-align: center;
 }
 
 .col-cover img {
-    width: 50px;
-    height: 70px;
+    width: 36px;
+    height: 50px;
     object-fit: cover;
     border-radius: 4px;
 }
 
 .no-cover {
-    width: 50px;
-    height: 70px;
+    width: 36px;
+    height: 50px;
     background: #eee;
     border-radius: 4px;
     display: flex;
@@ -88,32 +90,39 @@ h1 {
 
 /* 标题列 */
 .col-title {
-    min-width: 180px;
+    width: 160px;
 }
 
 .title-cn {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
     color: #2c3e50;
     margin-bottom: 2px;
 }
 
 .title-org {
-    font-size: 12px;
+    font-size: 11px;
     color: #999;
+}
+
+/* 类型列 */
+.col-type {
+    width: 50px;
+    text-align: center;
+    color: #666;
+    font-size: 12px;
 }
 
 /* 话数列 */
 .col-episodes {
-    width: 90px;
+    width: 60px;
     text-align: center;
-    font-size: 13px;
     color: #666;
 }
 
 /* 状态列 */
 .col-status {
-    width: 70px;
+    width: 60px;
     text-align: center;
 }
 
@@ -135,15 +144,25 @@ h1 {
     color: #856404;
 }
 
-/* 操作列 */
+/* 备注列（放在删除按钮前） */
+.col-note {
+    max-width: 150px;
+    color: #888;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 操作列（按钮颜色变淡） */
 .col-actions {
-    width: 110px;
     text-align: center;
+    width: 90px;
 }
 
 .col-actions button {
-    padding: 3px 10px;
-    font-size: 12px;
+    padding: 3px 8px;
+    font-size: 11px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
@@ -151,21 +170,21 @@ h1 {
 }
 
 .btn-edit {
-    background: #f39c12;
+    background: #95a5a6;
     color: #fff;
 }
 
 .btn-edit:hover {
-    background: #e67e22;
+    background: #7f8c8d;
 }
 
 .btn-delete {
-    background: #e74c3c;
+    background: #bdc3c7;
     color: #fff;
 }
 
 .btn-delete:hover {
-    background: #c0392b;
+    background: #95a5a6;
 }
 
 /* 底部添加按钮 */
@@ -284,22 +303,46 @@ h1 {
     }
 
     .anime-table td {
-        padding: 8px 6px;
+        padding: 6px 4px !important;
         font-size: 12px;
     }
 
     .col-cover img,
     .no-cover {
-        width: 40px;
-        height: 56px;
+        width: 30px;
+        height: 42px;
+    }
+
+    .col-title {
+        width: 120px;
     }
 
     .title-cn {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .title-org {
+        font-size: 10px;
+    }
+
+    .col-type,
+    .col-episodes,
+    .col-status {
         font-size: 11px;
+    }
+
+    .col-note {
+        max-width: 80px;
+        font-size: 11px;
+    }
+
+    .col-actions {
+        width: 70px;
+    }
+
+    .col-actions button {
+        padding: 2px 6px;
+        font-size: 10px;
     }
 
     .form-row {
