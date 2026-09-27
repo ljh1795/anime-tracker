@@ -12,13 +12,13 @@
 
         <!-- 番剧列表区域 -->
         <div id="animeList">
-            <!-- 正在加载数据... -->
+            <p style="text-align:center; padding:20px; color:#888;">正在加载...</p>
         </div>
 
         <!-- 数据备份与恢复区域 -->
         <div class="data-backup-area">
             <div class="backup-title">📂 数据备份中心</div>
-            <div class="backup-desc">数据保存在本地。建议定期导出备份，防止清理浏览器缓存时丢失。</div>
+            <div class="backup-desc">数据保存在本地。建议定期导出备份，防止清理浏览器缓存时丢失。（注：封面图片已内嵌到数据中，导入备份即可恢复图片）</div>
             <div class="backup-actions">
                 <button onclick="exportData()" class="btn-export">导出数据 (下载为文件)</button>
                 <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
@@ -89,10 +89,17 @@
                         </select>
                     </div>
                 </div>
+                
+                <!-- 新增：封面上传控件 -->
                 <div class="form-group">
-                    <label>封面文件名：</label>
-                    <input type="text" id="cover" placeholder="填 covers 文件夹里的文件名，如 GrandBlue.jpg">
+                    <label>封面图片：</label>
+                    <input type="file" id="coverFile" accept="image/*" onchange="previewImage(this)">
+                    <p style="font-size:12px; color:#888; margin-top:5px;">选择本地图片后，系统会自动处理并内嵌到数据中。</p>
+                    <div id="previewContainer" style="margin-top: 10px; display: none;">
+                        <img id="coverPreview" style="max-width: 100px; max-height: 140px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    </div>
                 </div>
+
                 <div class="form-group">
                     <label>备注：</label>
                     <textarea id="note" rows="2" placeholder="评分、观后感等"></textarea>
@@ -128,10 +135,28 @@
         function cancelEdit() {
             document.getElementById('animeForm').reset();
             document.getElementById('addForm').classList.add('hidden');
+            document.getElementById('previewContainer').style.display = 'none';
             editingKey = null;
             editingIndex = null;
             document.getElementById('formTitle').textContent = '添加新番剧';
             document.getElementById('submitBtn').textContent = '添加';
+        }
+
+        // 图片预览与Base64转换
+        let currentCoverBase64 = null; // 存储当前正在处理的图片Base64
+
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentCoverBase64 = e.target.result;
+                    const preview = document.getElementById('coverPreview');
+                    preview.src = currentCoverBase64;
+                    document.getElementById('previewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         // 渲染番剧列表
@@ -158,11 +183,21 @@
                 table.className = 'anime-table';
 
                 animes.forEach((anime, index) => {
+                    let coverHtml = '<div class="no-cover">无</div>';
+                    if (anime.cover) {
+                        // 判断是 Base64 编码还是旧的文件名路径
+                        if (anime.cover.startsWith('data:image')) {
+                            coverHtml = `<img src="${anime.cover}" alt="${anime.titleCn}">`;
+                        } else {
+                            coverHtml = `<img src="./covers/${anime.cover}" alt="${anime.titleCn}">`;
+                        }
+                    }
+
                     // 第一行
                     const tr1 = document.createElement('tr');
                     tr1.innerHTML = `
                         <td class="col-cover" rowspan="2">
-                            ${anime.cover ? `<img src="./covers/${anime.cover}" alt="${anime.titleCn}">` : '<div class="no-cover">无</div>'}
+                            ${coverHtml}
                         </td>
                         <td class="col-title-cn">${anime.titleCn}</td>
                         <td class="col-type">${anime.type || '-'}</td>
@@ -203,8 +238,17 @@
             const type = document.getElementById('type').value;
             const episodes = document.getElementById('episodes').value;
             const status = document.getElementById('status').value;
-            const cover = document.getElementById('cover').value;
             const note = document.getElementById('note').value;
+            
+            // 优先使用当前上传的 Base64 图片，如果没上传且是编辑模式，尝试保留原图
+            let cover = currentCoverBase64;
+            
+            if (!cover && editingKey !== null && editingIndex !== null) {
+                // 如果是编辑模式且没有换图，保留原来的封面
+                if (animeData[editingKey][editingIndex].cover) {
+                    cover = animeData[editingKey][editingIndex].cover;
+                }
+            }
 
             const key = `${year}-${season}`;
             if (!animeData[key]) {
@@ -249,8 +293,19 @@
             document.getElementById('type').value = anime.type || '原创';
             document.getElementById('episodes').value = anime.episodes || '';
             document.getElementById('status').value = anime.status;
-            document.getElementById('cover').value = anime.cover || '';
             document.getElementById('note').value = anime.note || '';
+
+            // 处理封面预览（如果是旧的路径名，编辑时无法直接预览，除非重新上传）
+            const previewContainer = document.getElementById('previewContainer');
+            if (anime.cover && anime.cover.startsWith('data:image')) {
+                document.getElementById('coverPreview').src = anime.cover;
+                previewContainer.style.display = 'block';
+                currentCoverBase64 = anime.cover;
+            } else {
+                previewContainer.style.display = 'none';
+                currentCoverBase64 = null;
+            }
+            document.getElementById('coverFile').value = ''; // 清空文件选择
 
             document.getElementById('formTitle').textContent = '编辑番剧';
             document.getElementById('submitBtn').textContent = '保存';
