@@ -12,28 +12,28 @@ body {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 950px;
     margin: 0 auto;
     padding: 20px;
 }
 
 h1 {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     color: #2c3e50;
     font-size: 24px;
 }
 
 /* 季度分组标题 */
 .season-section {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .season-section h2 {
     background: #2c3e50;
     color: #fff;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 12px 20px;
+    border-radius: 6px;
     font-size: 17px;
     margin-bottom: 0;
 }
@@ -43,9 +43,9 @@ h1 {
     width: 100%;
     border-collapse: collapse;
     background: #fff;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 8px 8px;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
 }
 
 .anime-table tr {
@@ -57,32 +57,33 @@ h1 {
 }
 
 .anime-table td {
-    padding: 12px 12px;
+    padding: 15px 10px;
     vertical-align: middle;
     font-size: 14px;
     line-height: 1.5;
 }
 
-/* 封面列（跨两行） */
+/* 封面列（跨两行，放大一倍） */
 .col-cover {
-    width: 80px;
+    width: 140px;
     text-align: center;
     vertical-align: middle !important;
+    padding: 10px !important;
 }
 
 .col-cover img {
-    width: 70px;
-    height: 100px;
+    width: 140px;
+    height: 200px;
     object-fit: cover;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 .no-cover {
-    width: 70px;
-    height: 100px;
+    width: 140px;
+    height: 200px;
     background: #f5f5f5;
-    border-radius: 4px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -90,49 +91,49 @@ h1 {
     color: #999;
 }
 
-/* 第一行：中文名 */
+/* 第一行：中文名（靠左） */
 .col-title-cn {
-    width: 200px;
+    width: 220px;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 16px;
     color: #2c3e50;
-    padding-bottom: 4px !important;
+    padding-bottom: 8px !important;
 }
 
-/* 第二行：原名 */
+/* 第二行：原名（靠左，对齐中文名） */
 .col-title-org {
     font-size: 12px;
     color: #999;
-    padding-top: 4px !important;
+    padding-top: 8px !important;
 }
 
-/* 类型列 */
+/* 类型列（对齐） */
 .col-type {
-    width: 60px;
+    width: 80px;
     text-align: center;
     color: #666;
     font-size: 13px;
 }
 
-/* 话数列 */
+/* 话数列（对齐） */
 .col-episodes {
-    width: 70px;
+    width: 80px;
     text-align: center;
     color: #666;
     font-size: 13px;
 }
 
-/* 状态列 */
+/* 状态列（对齐） */
 .col-status {
-    width: 70px;
+    width: 90px;
     text-align: center;
 }
 
 .status-badge {
     display: inline-block;
-    padding: 3px 12px;
+    padding: 4px 14px;
     border-radius: 12px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
 }
 
@@ -146,7 +147,7 @@ h1 {
     color: #856404;
 }
 
-/* 备注列（第二行） */
+/* 备注列（第二行，对齐类型列） */
 .col-note {
     max-width: 250px;
     color: #888;
@@ -154,23 +155,23 @@ h1 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-top: 4px !important;
+    padding-top: 8px !important;
 }
 
 /* 操作列（第二行末尾） */
 .col-actions {
     text-align: center;
     width: 100px;
-    padding-top: 4px !important;
+    padding-top: 8px !important;
 }
 
 .col-actions button {
-    padding: 4px 12px;
-    font-size: 12px;
+    padding: 6px 16px;
+    font-size: 13px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    margin: 0 2px;
+    margin: 0 4px;
 }
 
 .btn-edit {
@@ -301,24 +302,29 @@ h1 {
 }
 
 /* 移动端适配 */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .container {
         padding: 10px;
     }
 
     .anime-table td {
-        padding: 10px 6px;
+        padding: 8px 5px;
         font-size: 12px;
+    }
+
+    .col-cover {
+        width: 100px;
     }
 
     .col-cover img,
     .no-cover {
-        width: 55px;
-        height: 78px;
+        width: 100px;
+        height: 140px;
     }
 
     .col-title-cn {
-        font-size: 13px;
+        width: 140px;
+        font-size: 14px;
     }
 
     .col-title-org {
@@ -328,6 +334,7 @@ h1 {
     .col-type,
     .col-episodes,
     .col-status {
+        width: 60px;
         font-size: 11px;
     }
 
@@ -341,7 +348,7 @@ h1 {
     }
 
     .col-actions button {
-        padding: 3px 8px;
+        padding: 4px 8px;
         font-size: 11px;
     }
 
