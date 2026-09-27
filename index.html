@@ -8,14 +8,28 @@
 </head>
 <body>
     <div class="container">
-        <h1>我的追番记录</h1>
+        <h1>🎬 我的追番记录</h1>
 
         <!-- 番剧列表区域 -->
-        <div id="animeList"></div>
+        <div id="animeList">
+            <!-- 正在加载数据... -->
+        </div>
+
+        <!-- 数据备份与恢复区域 -->
+        <div class="data-backup-area">
+            <div class="backup-title">📂 数据备份中心</div>
+            <div class="backup-desc">数据保存在本地。建议定期导出备份，防止清理浏览器缓存时丢失。</div>
+            <div class="backup-actions">
+                <button onclick="exportData()" class="btn-export">导出数据 (下载为文件)</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
+                <button onclick="document.getElementById('importFile').click()" class="btn-import">导入数据 (选择备份文件)</button>
+                <button onclick="clearAllData()" class="btn-clear">清空所有数据</button>
+            </div>
+        </div>
 
         <!-- 底部添加按钮 -->
         <div class="add-button-wrapper">
-            <button id="toggleAddBtn" onclick="toggleAddForm()">+ 添加番剧</button>
+            <button onclick="toggleAddForm()">+ 添加番剧</button>
         </div>
 
         <!-- 添加/编辑表单（默认隐藏） -->
@@ -88,27 +102,15 @@
                     <button type="button" class="cancel-btn" onclick="cancelEdit()">取消</button>
                 </div>
             </form>
-
-            <!-- 数据备份区域 -->
-            <div class="backup-section">
-                <h3>数据备份</h3>
-                <div class="backup-buttons">
-                    <button type="button" class="backup-btn export-btn" onclick="exportData()">导出数据（下载备份文件）</button>
-                    <button type="button" class="backup-btn import-btn" onclick="document.getElementById('importFile').click()">导入数据（选择备份文件）</button>
-                    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-                    <button type="button" class="backup-btn clear-btn" onclick="clearAllData()">清空所有数据</button>
-                </div>
-                <p class="backup-hint">数据保存在浏览器本地。建议定期点击"导出数据"备份为文件，以防清理浏览器数据后丢失。</p>
-            </div>
         </div>
     </div>
 
     <script>
-        // 数据存储在 localStorage（浏览器本地存储）
         let animeData = JSON.parse(localStorage.getItem('animeData')) || {};
         let editingKey = null;
         let editingIndex = null;
 
+        // 保存数据到本地缓存
         function saveData() {
             localStorage.setItem('animeData', JSON.stringify(animeData));
         }
@@ -132,7 +134,7 @@
             document.getElementById('submitBtn').textContent = '添加';
         }
 
-        // 渲染番剧列表（双行对齐布局）
+        // 渲染番剧列表
         function renderList() {
             const listContainer = document.getElementById('animeList');
             listContainer.innerHTML = '';
@@ -140,19 +142,17 @@
             const sortedKeys = Object.keys(animeData).sort().reverse();
 
             if (sortedKeys.length === 0) {
-                listContainer.innerHTML = '<p style="text-align:center; padding:30px; color:#888; font-size:15px;">暂无追番记录，点击下方按钮添加吧！</p>';
+                listContainer.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">暂无追番记录，快添加吧！</p>';
                 return;
             }
 
             sortedKeys.forEach(key => {
-                const parts = key.split('-');
-                const year = parts[0];
-                const season = parts[1];
+                const [year, season] = key.split('-');
                 const animes = animeData[key];
 
                 const section = document.createElement('div');
                 section.className = 'season-section';
-                section.innerHTML = '<h2>' + year + '年 ' + season + '</h2>';
+                section.innerHTML = `<h2>${year}年 ${season}</h2>`;
 
                 const table = document.createElement('table');
                 table.className = 'anime-table';
@@ -160,32 +160,28 @@
                 animes.forEach((anime, index) => {
                     // 第一行
                     const tr1 = document.createElement('tr');
-                    let coverHtml = '';
-                    if (anime.cover) {
-                        coverHtml = '<img src="./covers/' + anime.cover + '" alt="' + anime.titleCn + '">';
-                    } else {
-                        coverHtml = '<div class="no-cover">无</div>';
-                    }
-                    tr1.innerHTML =
-                        '<td class="col-cover" rowspan="2">' + coverHtml + '</td>' +
-                        '<td class="col-title-cn">' + anime.titleCn + '</td>' +
-                        '<td class="col-type">' + (anime.type || '-') + '</td>' +
-                        '<td class="col-episodes">' + (anime.episodes || '-') + '</td>' +
-                        '<td class="col-status">' +
-                            '<span class="status-badge ' + (anime.status === '看完' ? 'status-done' : 'status-watching') + '">' + anime.status + '</span>' +
-                        '</td>';
+                    tr1.innerHTML = `
+                        <td class="col-cover" rowspan="2">
+                            ${anime.cover ? `<img src="./covers/${anime.cover}" alt="${anime.titleCn}">` : '<div class="no-cover">无</div>'}
+                        </td>
+                        <td class="col-title-cn">${anime.titleCn}</td>
+                        <td class="col-type">${anime.type || '-'}</td>
+                        <td class="col-episodes">${anime.episodes || '-'}</td>
+                        <td class="col-status">
+                            <span class="status-badge ${anime.status === '看完' ? 'status-done' : 'status-watching'}">${anime.status}</span>
+                        </td>
+                    `;
 
-                    // 第二行 - 使用模板字符串确保变量正确嵌入HTML属性
+                    // 第二行
                     const tr2 = document.createElement('tr');
-                    // 对key做HTML转义防止XSS
-                    const safeKey = key.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                    tr2.innerHTML =
-                        '<td class="col-title-org">' + (anime.titleOrg || '') + '</td>' +
-                        '<td class="col-note" colspan="3">' + (anime.note || '') + '</td>' +
-                        '<td class="col-actions">' +
-                            '<button class="btn-edit" onclick="editAnime(\'' + safeKey + '\', ' + index + ')">编辑</button>' +
-                            '<button class="btn-delete" onclick="deleteAnime(\'' + safeKey + '\', ' + index + ')">删除</button>' +
-                        '</td>';
+                    tr2.innerHTML = `
+                        <td class="col-title-org">${anime.titleOrg || ''}</td>
+                        <td class="col-note" colspan="3">${anime.note || ''}</td>
+                        <td class="col-actions">
+                            <button class="btn-edit" onclick="editAnime('${key}', ${index})">编辑</button>
+                            <button class="btn-delete" onclick="deleteAnime('${key}', ${index})">删除</button>
+                        </td>
+                    `;
 
                     table.appendChild(tr1);
                     table.appendChild(tr2);
@@ -210,12 +206,12 @@
             const cover = document.getElementById('cover').value;
             const note = document.getElementById('note').value;
 
-            const key = year + '-' + season;
+            const key = `${year}-${season}`;
             if (!animeData[key]) {
                 animeData[key] = [];
             }
 
-            const newAnime = { titleCn: titleCn, titleOrg: titleOrg, type: type, episodes: episodes, status: status, cover: cover, note: note };
+            const newAnime = { titleCn, titleOrg, type, episodes, status, cover, note };
 
             if (editingKey !== null && editingIndex !== null) {
                 animeData[key][editingIndex] = newAnime;
@@ -262,61 +258,59 @@
             document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ====== 数据备份功能 ======
-
-        // 导出数据：下载为 JSON 文件
+        // --- 数据备份相关逻辑 ---
+        
+        // 导出数据为 JSON 文件
         function exportData() {
             const dataStr = JSON.stringify(animeData, null, 4);
-            const blob = new Blob([dataStr], { type: 'application/json' });
+            const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
+            
             const a = document.createElement('a');
             a.href = url;
-            const dateStr = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-            a.download = '追番记录备份_' + dateStr + '.json';
+            a.download = `anime_backup_${new Date().toISOString().slice(0,10)}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            alert('数据已导出为备份文件，请妥善保存！');
+            alert("数据已导出！请妥善保存下载的文件。");
         }
 
-        // 导入数据：从 JSON 文件读取
-        function importData(event) {
-            const file = event.target.files[0];
+        // 导入数据
+        function importData(input) {
+            const file = input.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const importedData = JSON.parse(e.target.result);
-                    for (const key in importedData) {
-                        animeData[key] = importedData[key];
+                    if (confirm("导入数据将覆盖当前所有记录，确定要继续吗？")) {
+                        animeData = importedData;
+                        saveData();
+                        renderList();
+                        alert("数据导入成功！");
                     }
-                    saveData();
-                    renderList();
-                    alert('数据导入成功！');
                 } catch (err) {
-                    alert('文件格式错误，请选择正确的备份文件！');
+                    alert("文件格式错误，请确保是有效的 JSON 备份文件。");
                 }
             };
             reader.readAsText(file);
-            event.target.value = '';
+            input.value = ''; // 重置 input 以便下次选择同一文件
         }
 
         // 清空所有数据
         function clearAllData() {
-            if (confirm('确定要清空所有追番数据吗？此操作不可恢复！建议先导出数据备份。')) {
-                if (confirm('再次确认：真的要删除所有数据吗？')) {
-                    animeData = {};
-                    localStorage.removeItem('animeData');
-                    renderList();
-                    alert('所有数据已清空。');
-                }
+            if (confirm("确定要清空所有数据吗？此操作不可逆！")) {
+                animeData = {};
+                saveData();
+                renderList();
+                alert("数据已清空。");
             }
         }
 
-        // 页面加载完成后渲染列表
-        renderList();
+        // 页面加载完成后初始化
+        window.onload = renderList;
     </script>
 </body>
 </html>
